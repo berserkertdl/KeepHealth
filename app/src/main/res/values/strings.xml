@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">KeepHealth</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!--actionBar-->
+    <string name="menu_add">添加</string>
+    <string name="actionbar_title">体重</string>
+
+    <!--drawer-->
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Close</string>
+
+    <!--dialog-->
+    <string name="dialog_date">Date</string>
+    <string name="dialog_time">Time</string>
+    <string name="dialog_weight">体重</string>
+    <string name="dialog_comment">备注</string>
+
+
+</resources>
