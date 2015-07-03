@@ -17,6 +17,12 @@
     <string name="dialog_time">Time</string>
     <string name="dialog_weight">体重</string>
     <string name="dialog_comment">备注</string>
+    <string name="dialog_ok">确定</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_choose_weight">请选择您的体重</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
