@@ -22,6 +22,9 @@ import android.widget.TimePicker;
 import com.health.keephealth.R;
 import com.health.keephealth.helper.vo.WeightEntity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -79,10 +82,10 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
     private WeightEntity getWeight(){
         float weight = Float.parseFloat(weightTxt.getText().toString());
         String comment = commentTxt.getText().toString();
-        DateFormat format = new DateFormat();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+//        Date add_time = dateFormat.format(datetxt.getText().toString() + " " +timeTxt.getText().toString());
 
-
-        WeightEntity entity = new WeightEntity();
+//        WeightEntity entity = new WeightEntity(weight,add_time,comment);
 
 
         return entity;

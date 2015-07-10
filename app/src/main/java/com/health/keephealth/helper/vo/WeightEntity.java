@@ -47,7 +47,7 @@ public class WeightEntity {
     public WeightEntity() {
     }
 
-    public WeightEntity(String comment, float weight, Date add_time) {
+    public WeightEntity(float weight, Date add_time,String comment) {
         this.comment = comment;
         this.weight = weight;
         this.add_time = add_time;
