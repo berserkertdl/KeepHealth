@@ -35,10 +35,15 @@ public class WeightPickerDialogFragment extends DialogFragment implements Number
 
     public static WeightPickerDialogFragment newInstance(String val){
         WeightPickerDialogFragment weightPickerDialogFragment = new WeightPickerDialogFragment();
-        if(val!=null&&"".equals(val)){
-            String[] arr = val.split(".");
-            weightPickerDialogFragment.f_default = Integer.parseInt(arr[0]);
-            weightPickerDialogFragment.l_default = Integer.parseInt(arr[1]);
+        if(val!=null&&!"".equals(val)){
+            try {
+                String[] arr = val.split("\\.");
+                weightPickerDialogFragment.f_default = Integer.parseInt(arr[0]);
+                weightPickerDialogFragment.l_default = Integer.parseInt(arr[1]);
+            }catch (Exception e){
+                weightPickerDialogFragment.f_default = 0;
+                weightPickerDialogFragment.l_default = 0;
+            }
         }
         return weightPickerDialogFragment;
     }

@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.health.keephealth.R;
+import com.health.keephealth.helper.vo.WeightEntity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,8 +59,34 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
     @Override
     public void onClick(DialogInterface dialog, int which) {
 
+        switch (which){
+            // ok
+            case -1:
+
+                break;
+            //cancel
+            case -2:
+                break;
+            //ignore
+            case -3:
+                break;
+
+        }
+
     }
 
+
+    private WeightEntity getWeight(){
+        float weight = Float.parseFloat(weightTxt.getText().toString());
+        String comment = commentTxt.getText().toString();
+        DateFormat format = new DateFormat();
+
+
+        WeightEntity entity = new WeightEntity();
+
+
+        return entity;
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
