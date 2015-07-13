@@ -15,18 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <EditText
-                android:id="@+id/et_start_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/et_end_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/et_start_time" />
-
             <ListView
                 android:id="@+id/list"
                 android:layout_width="match_parent"

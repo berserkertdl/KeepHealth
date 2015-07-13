@@ -3,11 +3,15 @@ package com.health.keephealth.ui.fragments;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
@@ -16,12 +20,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.health.keephealth.R;
+import com.health.keephealth.helper.database.DBManager;
+import com.health.keephealth.helper.database.DBThread;
 import com.health.keephealth.helper.vo.WeightEntity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,6 +41,11 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
 
     private EditText datetxt, timeTxt, weightTxt, commentTxt;
 
+    public DataChangeListener dataChangeListener;
+
+    public interface DataChangeListener{
+        public void dataChange();
+    }
 
     @NonNull
     @Override
@@ -59,35 +72,45 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
         super.dismiss();
     }
 
+    private Handler handler;
+
     @Override
     public void onClick(DialogInterface dialog, int which) {
 
-        switch (which){
+        switch (which) {
             // ok
             case -1:
-
-                break;
-            //cancel
+                handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        switch (msg.what) {
+                            case 0:
+                                dataChangeListener.dataChange();
+                                break;
+                        }
+                    }
+                };
+                new DBThread().new WeightInsertThread(handler, getWeight()).start();
+                //cancel
             case -2:
                 break;
             //ignore
             case -3:
                 break;
-
         }
-
     }
 
-
-    private WeightEntity getWeight(){
+    private WeightEntity getWeight() {
         float weight = Float.parseFloat(weightTxt.getText().toString());
         String comment = commentTxt.getText().toString();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
-//        Date add_time = dateFormat.format(datetxt.getText().toString() + " " +timeTxt.getText().toString());
-
-//        WeightEntity entity = new WeightEntity(weight,add_time,comment);
-
-
+        Date add_time = null;
+        try {
+            add_time = dateFormat.parse(datetxt.getText().toString() + " " + timeTxt.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        WeightEntity entity = new WeightEntity(weight, add_time, comment);
         return entity;
     }
 
@@ -124,7 +147,7 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
                 break;
 
             case R.id.weight_txt:
-                WeightPickerDialogFragment weightPickerDialogFragment =  WeightPickerDialogFragment.newInstance(weightTxt.getText().toString());
+                WeightPickerDialogFragment weightPickerDialogFragment = WeightPickerDialogFragment.newInstance(weightTxt.getText().toString());
                 weightPickerDialogFragment.setOnValueChangeListener(new WeightPickerDialogFragment.OnValueChangeListener() {
                     @Override
                     public void onValueChange(double oldVal, double newVal) {

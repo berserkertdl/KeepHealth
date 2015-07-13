@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.health.keephealth.helper.utils.L;
+
 /**
  * Created by Administrator on 2015/7/10 0010.
  */
@@ -26,10 +28,12 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                 "weight float default 0," +
                 "add_time timestamp default (datetime('now','localtime'))," +
                 "comment text)");
+
+        L.i(DBOpenHelper.class,"create table successful");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        L.i(DBOpenHelper.class,"update db successful");
     }
 }
