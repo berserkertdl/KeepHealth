@@ -22,9 +22,12 @@ import android.widget.Toast;
 
 import com.health.keephealth.R;
 import com.health.keephealth.helper.database.DBManager;
+import com.health.keephealth.helper.vo.WeightEntity;
+import com.health.keephealth.ui.adapters.WeightAdapter;
 import com.health.keephealth.ui.fragments.WeightEditDialogFragment;
 
 import java.util.Calendar;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +55,16 @@ public class MainActivity extends AppCompatActivity {
 
         initToolBar();
         initDrawer();
+
+    }
+
+    private WeightAdapter weightAdapter;
+    private List<WeightEntity> entityList;
+
+    private void initWeightData(){
+        entityList = DBManager.getAllWeigthInfos();
+        weightAdapter = new WeightAdapter(MainActivity.this,entityList);
+        
 
     }
 

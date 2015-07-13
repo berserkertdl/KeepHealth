@@ -15,6 +15,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Administrator on 2015/7/13 0013.
@@ -22,11 +23,11 @@ import java.util.Calendar;
 public class WeightAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<Object> items;
+    private List items;
     private LayoutInflater inflater;
     private static final String weeks [] = new String []{"周日","周一","周二","周三","周四","周五","周六"};
 
-    public WeightAdapter(Context mContext, ArrayList<Object> items) {
+    public WeightAdapter(Context mContext, List items) {
         this.mContext = mContext;
         this.items = items;
         this.inflater = LayoutInflater.from(mContext);
