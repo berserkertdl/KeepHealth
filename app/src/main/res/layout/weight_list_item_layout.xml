@@ -28,9 +28,7 @@
 
     <RelativeLayout
         android:id="@+id/front"
-        style="@style/ListFrontContent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        style="@style/ListFrontContent">
 
         <LinearLayout
             android:id="@+id/weight_title_container"

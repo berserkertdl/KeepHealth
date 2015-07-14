@@ -23,10 +23,9 @@
     </style>
 
     <style name="ListFrontContent">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">@dimen/height_list</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/background_list_front</item>
-        <item name="android:padding">@dimen/padding_default</item>
     </style>
 
 
