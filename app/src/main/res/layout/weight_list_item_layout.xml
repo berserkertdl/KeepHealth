@@ -5,57 +5,82 @@
 
 
     <LinearLayout
-        android:id="@+id/weight_title_container"
-        android:layout_width="36dp"
+        android:id="@+id/back"
+        style="@style/ListBackContent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/weight_title"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-        <TextView
-            android:id="@+id/week"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="周一" />
+        android:tag="back">
 
-        <TextView android:id="@+id/date"
+        <Button
+            android:id="@+id/example_row_b_action_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="13" />
+            android:text="edit" />
 
-        <TextView
-            android:id="@+id/hour_min"
+        <Button
+            android:id="@+id/example_row_b_action_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="15:39" />
+            android:text="delete" />
+
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/weight_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/weight_title_container"
-        android:layout_centerVertical="true"
-        android:paddingLeft="16dp"
-        android:text="@string/dialog_weight" />
+    <RelativeLayout
+        android:id="@+id/front"
+        style="@style/ListFrontContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/weight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/weight_title"
-        android:layout_marginLeft="12dp"
-        android:layout_toRightOf="@+id/weight_title"
-        android:text="111aaaa" />
+        <LinearLayout
+            android:id="@+id/weight_title_container"
+            android:layout_width="36dp"
+            android:layout_height="match_parent"
+            android:background="@color/weight_title"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/add_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:paddingRight="16dp"
-        android:text="2015年7月13日 11:05:13" />
+            <TextView
+                android:id="@+id/week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="周一"
+                android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="13"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/hour_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15:39"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/weight_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/weight_title_container"
+            android:paddingLeft="16dp"
+            android:text="@string/dialog_weight" />
+
+        <TextView
+            android:id="@+id/weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/weight_title"
+            android:text="111aaaa" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

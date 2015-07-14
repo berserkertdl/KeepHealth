@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.health.keephealth.R;
 import com.health.keephealth.helper.vo.WeightEntity;
+import com.health.swipelistview.SwipeListView;
+//import com.health.swipelistview.SwipeListView;
 
 import org.w3c.dom.Text;
 
@@ -25,7 +27,7 @@ public class WeightAdapter extends BaseAdapter {
     private Context mContext;
     private List items;
     private LayoutInflater inflater;
-    private static final String weeks [] = new String []{"周日","周一","周二","周三","周四","周五","周六"};
+    private static final String weeks[] = new String[]{"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 
     public WeightAdapter(Context mContext, List items) {
         this.mContext = mContext;
@@ -51,23 +53,27 @@ public class WeightAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Object item = items.get(position);
-        if(item.getClass() == WeightEntity.class){
-            convertView = inflater.inflate(R.layout.weight_list_item_layout,null);
-            WeightEntity entity = (WeightEntity)item;
+        if (item.getClass() == WeightEntity.class) {
+            convertView = inflater.inflate(R.layout.weight_list_item_layout, parent,false);
+            WeightEntity entity = (WeightEntity) item;
             Calendar cd = Calendar.getInstance();
             cd.setTime(entity.getAdd_time());
             ((TextView) convertView.findViewById(R.id.week)).setText(weeks[cd.get(Calendar.DAY_OF_WEEK)]);
-            ((TextView) convertView.findViewById(R.id.date)).setText(cd.get(Calendar.DAY_OF_MONTH));
-            String hour = cd.get(Calendar.DAY_OF_MONTH)+"".length()==1?"0":"" + cd.get(Calendar.DAY_OF_MONTH);
-            String minute = cd.get(Calendar.MINUTE)+"".length()==1?"0":"" + cd.get(Calendar.MINUTE);
-            ((TextView) convertView.findViewById(R.id.hour_min)).setText(hour+":"+minute);
-            ((TextView) convertView.findViewById(R.id.weight)).setText(entity.getWeight()+" kg");
+            ((TextView) convertView.findViewById(R.id.date)).setText(cd.get(Calendar.DAY_OF_MONTH)+"");
+            String hour = cd.get(Calendar.HOUR_OF_DAY) + "".length() == 1 ? "0" : "" + cd.get(Calendar.HOUR_OF_DAY);
+            String minute = cd.get(Calendar.MINUTE) + "".length() == 1 ? "0" : "" + cd.get(Calendar.MINUTE);
+            ((TextView) convertView.findViewById(R.id.hour_min)).setText(hour + ":" + minute);
+            ((TextView) convertView.findViewById(R.id.weight)).setText(String.format("%g kg", entity.getWeight()));
             convertView.setTag(entity);
-        }else{
-            ((TextView) convertView.findViewById(R.id.list_header_month_title)).setText("");
-            ((TextView) convertView.findViewById(R.id.list_header_year_title)).setText("");
+            ((SwipeListView)parent).recycle(convertView, position);
+        } else {
+            convertView = inflater.inflate(R.layout.weight_list_item_title_layout, null);
+            String strs[] = (String[]) item;
+            ((TextView) convertView.findViewById(R.id.list_header_month_title)).setText(String.format("%s 月",strs[1]));
+            ((TextView) convertView.findViewById(R.id.list_header_year_title)).setText(strs[0]);
             convertView.setTag(null);
         }
+
         return convertView;
     }
 

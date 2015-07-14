@@ -27,8 +27,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                 "id integer PRIMARY KEY autoincrement not null," +
                 "weight float default 0," +
                 "add_time timestamp default (datetime('now','localtime'))," +
-                "comment text)");
-
+                "comment text," +
+                "update_time timestamp )");
         L.i(DBOpenHelper.class,"create table successful");
     }
 

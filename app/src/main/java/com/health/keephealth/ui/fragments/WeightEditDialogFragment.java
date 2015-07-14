@@ -31,6 +31,7 @@ import com.health.keephealth.helper.vo.WeightEntity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -58,6 +59,15 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
         timeTxt = (EditText) view.findViewById(R.id.time_txt);
         weightTxt = (EditText) view.findViewById(R.id.weight_txt);
         commentTxt = (EditText) view.findViewById(R.id.comment_txt);
+        Calendar cd = Calendar.getInstance();
+
+        datetxt.setText(String.valueOf(cd.get(Calendar.YEAR)) + "年" +
+                String.valueOf(cd.get(Calendar.MONTH) + 1) + "月" +
+                String.valueOf(cd.get(Calendar.DAY_OF_MONTH)) + "日");
+
+        timeTxt.setText(String.valueOf(cd.get(Calendar.HOUR_OF_DAY)) + ":" +
+                String.valueOf(cd.get(Calendar.MINUTE)));
+
         datetxt.setOnTouchListener(this);
         timeTxt.setOnTouchListener(this);
         weightTxt.setOnTouchListener(this);

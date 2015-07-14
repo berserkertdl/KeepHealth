@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,11 +16,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <com.health.swipelistview.SwipeListView
+                android:id="@+id/mSwipeListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:listSelector="#00000000"
+                swipe:swipeBackView="@+id/back"
+                swipe:swipeCloseAllItemsWhenMoveList="true"
+                swipe:swipeFrontView="@+id/front"
+                swipe:swipeMode="both" />
+
             <ListView
                 android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/et_end_time" />
+                android:layout_height="match_parent"/>
 
         </RelativeLayout>
 
