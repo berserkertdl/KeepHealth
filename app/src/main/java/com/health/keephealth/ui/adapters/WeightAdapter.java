@@ -37,7 +37,7 @@ public class WeightAdapter extends BaseAdapter {
 
 
     public interface ClickListener{
-        
+
     }
 
     public WeightAdapter(Context mContext, List items) {
