@@ -1,12 +1,18 @@
 package com.health.keephealth.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
+import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.health.keephealth.R;
 import com.health.keephealth.helper.vo.WeightEntity;
@@ -24,13 +30,18 @@ import java.util.List;
  */
 public class WeightAdapter extends BaseAdapter {
 
-    private Context mContext;
+    private Context context;
     private List items;
     private LayoutInflater inflater;
     private static final String weeks[] = new String[]{"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 
+
+    public interface ClickListener{
+        
+    }
+
     public WeightAdapter(Context mContext, List items) {
-        this.mContext = mContext;
+        this.context = mContext;
         this.items = items;
         this.inflater = LayoutInflater.from(mContext);
     }
@@ -65,7 +76,6 @@ public class WeightAdapter extends BaseAdapter {
             ((TextView) convertView.findViewById(R.id.hour_min)).setText(hour + ":" + minute);
             ((TextView) convertView.findViewById(R.id.weight)).setText(String.format("%g kg", entity.getWeight()));
             convertView.setTag(entity);
-            ((SwipeListView)parent).recycle(convertView, position);
         } else {
             convertView = inflater.inflate(R.layout.weight_list_item_title_layout, null);
             String strs[] = (String[]) item;
@@ -73,7 +83,7 @@ public class WeightAdapter extends BaseAdapter {
             ((TextView) convertView.findViewById(R.id.list_header_year_title)).setText(strs[0]);
             convertView.setTag(null);
         }
-
+        ((SwipeListView)parent).recycle(convertView, position);
         return convertView;
     }
 

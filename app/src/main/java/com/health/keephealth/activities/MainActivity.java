@@ -1,8 +1,11 @@
 package com.health.keephealth.activities;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
+import android.app.ProgressDialog;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -10,19 +13,18 @@ import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.health.keephealth.R;
 import com.health.keephealth.helper.database.DBManager;
 import com.health.keephealth.helper.utils.L;
+import com.health.keephealth.helper.vo.PackageItem;
 import com.health.keephealth.helper.vo.WeightEntity;
 import com.health.keephealth.ui.adapters.WeightAdapter;
 import com.health.keephealth.ui.fragments.WeightEditDialogFragment;
@@ -31,7 +33,10 @@ import com.health.swipelistview.SwipeListView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+
+import android.widget.AbsListView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private SimpleCursorAdapter cursorAdapter;
     private Cursor cursor = null;
 
+
     private SwipeListView mSwipeListView;
     private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -54,11 +60,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = (ListView) findViewById(R.id.list);
+//        listView = (ListView) findViewById(R.id.list);
 
         DBManager.initManger(this);
         initToolBar();
-        initDrawer();
+//        initDrawer();
 //        initWeightData();
         findView();
 
@@ -94,11 +100,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initDrawer() {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+       /* mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         // 實作 drawer toggle 並放入 toolbar
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);*/
     }
 
     private void initToolBar() {
@@ -134,12 +140,57 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private List<PackageItem> data;
+    private ProgressDialog progressDialog;
 
     private void findView() {
-        items = parseWeightInfo(DBManager.getAllWeigthInfos());
+
+        items = new ArrayList();
         weightAdapter = new WeightAdapter(MainActivity.this, items);
         mSwipeListView = (SwipeListView) findViewById(R.id.mSwipeListView);
-        mSwipeListView.setSwipeListViewListener(new BaseSwipeListViewListener() {
+        mSwipeListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mSwipeListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
+                @Override
+                public void onItemCheckedStateChanged(ActionMode mode, int position,
+                                                      long id, boolean checked) {
+                    mode.setTitle("Selected (" + mSwipeListView.getCountSelected() + ")");
+                }
+
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.menu_delete:
+                            mSwipeListView.dismissSelected();
+                            mode.finish();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    MenuInflater inflater = mode.getMenuInflater();
+                    inflater.inflate(R.menu.menu_choice_items, menu);
+                    return true;
+                }
+
+                @Override
+                public void onDestroyActionMode(ActionMode mode) {
+                    mSwipeListView.unselectedChoiceStates();
+                }
+
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
+            });
+        }*/
+
+        /*mSwipeListView.setSwipeListViewListener(new BaseSwipeListViewListener() {
 
             @Override
             public void onStartOpen(int position, int action,
@@ -175,16 +226,48 @@ public class MainActivity extends AppCompatActivity {
                 }
                 weightAdapter.notifyDataSetChanged();
             }
-        });
+        });*/
 
         mSwipeListView.setAdapter(weightAdapter);
 
         mSwipeListView.setSwipeMode(SwipeListView.SWIPE_MODE_BOTH);
         mSwipeListView.setSwipeActionLeft(SwipeListView.SWIPE_ACTION_REVEAL);
         mSwipeListView.setSwipeActionRight(SwipeListView.SWIPE_ACTION_REVEAL);
-        mSwipeListView.setOffsetLeft(getResources().getDimension(R.dimen.left_offset));
-        mSwipeListView.setOffsetRight(getResources().getDimension(R.dimen.right_offset));
-        mSwipeListView.setAnimationTime(200);
+        mSwipeListView.setOffsetLeft(convertDpToPixel(getResources().getDimension(R.dimen.left_offset)));
+        mSwipeListView.setOffsetRight(convertDpToPixel(getResources().getDimension(R.dimen.right_offset)));
+        mSwipeListView.setAnimationTime(0);
         mSwipeListView.setSwipeOpenOnLongPress(true);
+
+        new ListAppTask().execute();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
     }
+
+    public int convertDpToPixel(float dp) {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return (int) px;
+    }
+
+    public class ListAppTask extends AsyncTask<Void, Void, List> {
+
+        protected List doInBackground(Void... args) {
+            return parseWeightInfo(DBManager.getAllWeigthInfos());
+        }
+
+        protected void onPostExecute(List result) {
+            items.clear();
+            items.addAll(result);
+            weightAdapter.notifyDataSetChanged();
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+        }
+    }
+
 }

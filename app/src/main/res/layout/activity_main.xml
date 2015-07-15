@@ -6,34 +6,14 @@
     tools:context=".MainActivity">
 
 
-    <android.support.v4.widget.DrawerLayout
+   <!-- <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Content -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <com.health.swipelistview.SwipeListView
-                android:id="@+id/mSwipeListView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:listSelector="#00000000"
-                swipe:swipeBackView="@+id/back"
-                swipe:swipeCloseAllItemsWhenMoveList="true"
-                swipe:swipeFrontView="@+id/front"
-                swipe:swipeMode="both" />
 
-            <ListView
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </RelativeLayout>
-
-        <!-- Side Drawer -->
+        &lt;!&ndash; Side Drawer &ndash;&gt;
         <LinearLayout
             android:id="@+id/drawer_view"
             android:layout_width="@dimen/navdrawer_width"
@@ -44,7 +24,33 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.DrawerLayout>
+    </android.support.v4.widget.DrawerLayout>-->
 
+    <com.health.swipelistview.SwipeListView
+        android:id="@+id/mSwipeListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:listSelector="#00000000"
+        swipe:swipeBackView="@+id/back"
+        swipe:swipeCloseAllItemsWhenMoveList="true"
+        swipe:swipeDrawableChecked="@drawable/choice_selected"
+        swipe:swipeDrawableUnchecked="@drawable/choice_unselected"
+        swipe:swipeFrontView="@+id/front"
+        swipe:swipeMode="both" />
+
+
+    <!-- Content -->
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>-->
 
 </RelativeLayout>
