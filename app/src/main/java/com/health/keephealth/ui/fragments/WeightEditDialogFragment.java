@@ -3,7 +3,6 @@ package com.health.keephealth.ui.fragments;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -11,21 +10,15 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
-import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.health.keephealth.R;
-import com.health.keephealth.helper.database.DBManager;
 import com.health.keephealth.helper.database.DBThread;
 import com.health.keephealth.helper.vo.WeightEntity;
 
@@ -43,6 +36,17 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
     private EditText datetxt, timeTxt, weightTxt, commentTxt;
 
     public DataChangeListener dataChangeListener;
+    private WeightEntity mEntity;
+    private Handler handler;
+
+    public static WeightEditDialogFragment getInstance(WeightEntity entity){
+        WeightEditDialogFragment dialogFragment =  new WeightEditDialogFragment();
+        if(entity==null){
+            entity = new WeightEntity();
+        }
+        dialogFragment.mEntity = entity;
+        return dialogFragment;
+    }
 
     public interface DataChangeListener{
         public void dataChange();
@@ -59,8 +63,14 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
         timeTxt = (EditText) view.findViewById(R.id.time_txt);
         weightTxt = (EditText) view.findViewById(R.id.weight_txt);
         commentTxt = (EditText) view.findViewById(R.id.comment_txt);
+        weightTxt.setText(mEntity.getWeight()+"");
+        commentTxt.setText(mEntity.getComment());
+        Date date = mEntity.getAdd_time();
+        if(date==null){
+            date = new Date();
+        }
         Calendar cd = Calendar.getInstance();
-
+        cd.setTime(date);
         datetxt.setText(String.valueOf(cd.get(Calendar.YEAR)) + "年" +
                 String.valueOf(cd.get(Calendar.MONTH) + 1) + "月" +
                 String.valueOf(cd.get(Calendar.DAY_OF_MONTH)) + "日");
@@ -82,8 +92,6 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
         super.dismiss();
     }
 
-    private Handler handler;
-
     @Override
     public void onClick(DialogInterface dialog, int which) {
 
@@ -100,7 +108,7 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
                         }
                     }
                 };
-                new DBThread().new WeightInsertThread(handler, getWeight()).start();
+                new DBThread().new WeightSaveOrUpdateThread(handler, getWeight()).start();
                 //cancel
             case -2:
                 break;
@@ -121,6 +129,7 @@ public class WeightEditDialogFragment extends DialogFragment implements DialogIn
             e.printStackTrace();
         }
         WeightEntity entity = new WeightEntity(weight, add_time, comment);
+        entity.setId(mEntity.getId());
         return entity;
     }
 

@@ -1,28 +1,34 @@
 package com.health.keephealth.activities;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.health.keephealth.R;
 import com.health.keephealth.helper.database.DBManager;
+import com.health.keephealth.helper.database.DBThread;
 import com.health.keephealth.helper.utils.L;
 import com.health.keephealth.helper.vo.PackageItem;
 import com.health.keephealth.helper.vo.WeightEntity;
@@ -54,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SwipeListView mSwipeListView;
     private final static String TAG = MainActivity.class.getSimpleName();
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         DBManager.initManger(this);
         initToolBar();
 //        initDrawer();
-//        initWeightData();
         findView();
 
     }
@@ -74,12 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private List<WeightEntity> entityList;
     private List items;
 
-    private void initWeightData() {
-        entityList = DBManager.getAllWeigthInfos();
-        items = parseWeightInfo(entityList);
-        weightAdapter = new WeightAdapter(MainActivity.this, items);
-        listView.setAdapter(weightAdapter);
-    }
+    private AlertDialog deleteDialog;
 
     private List parseWeightInfo(List<WeightEntity> lists) {
         String year = "";
@@ -94,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 items.add(new String[]{year, month});
             }
             items.add(entity);
-        }
-        ;
+        };
         return items;
     }
 
@@ -124,20 +124,34 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_add) {
-            WeightEditDialogFragment weightDialogFragment = new WeightEditDialogFragment();
-            weightDialogFragment.dataChangeListener = new WeightEditDialogFragment.DataChangeListener() {
-                public void dataChange() {
-                    items.removeAll(items);
-                    items.addAll(parseWeightInfo(DBManager.getAllWeigthInfos()));
-                    weightAdapter.notifyDataSetChanged();
-                }
-            };
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            weightDialogFragment.show(fragmentTransaction, "df");
+            if (entityList == null || entityList.size() == 0) {
+                showWeightEditDialogFragMent(null);
+            } else {
+                WeightEntity entity = entityList.get(0);
+                entity.setId(0);
+                entity.setComment("");
+                showWeightEditDialogFragMent(entity);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void showWeightEditDialogFragMent(WeightEntity entity) {
+        WeightEditDialogFragment weightDialogFragment = WeightEditDialogFragment.getInstance(entity);
+        weightDialogFragment.dataChangeListener = new WeightEditDialogFragment.DataChangeListener() {
+            public void dataChange() {
+                items.clear();
+                entityList = DBManager.getAllWeigthInfos();
+                items.addAll(parseWeightInfo(entityList));
+                weightAdapter.notifyDataSetChanged();
+                mSwipeListView.closeOpenedItems();
+            }
+        };
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        weightDialogFragment.show(fragmentTransaction, "df");
     }
 
     private List<PackageItem> data;
@@ -147,10 +161,50 @@ public class MainActivity extends AppCompatActivity {
 
         items = new ArrayList();
         weightAdapter = new WeightAdapter(MainActivity.this, items);
+
+        weightAdapter.setClickListener(new WeightAdapter.OnClickListener() {
+            @Override
+            public void onEditClick(View v, final Object item) {
+                showWeightEditDialogFragMent((WeightEntity) item);
+            }
+
+            @Override
+            public void onDeleteClick(View v, final Object item) {
+                deleteDialog = new AlertDialog.Builder(MainActivity.this).setTitle("提示").setMessage("确定要删除？").setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        L.i(TAG, "----体重");
+                        if(which!=-1){
+                            return;
+                        }
+                        handler = new Handler(){
+                            @Override
+                            public void handleMessage(Message msg) {
+                                switch (msg.what) {
+                                    case 0:
+                                        items.remove(item);
+                                        weightAdapter.notifyDataSetChanged();
+                                        break;
+                                }
+                            }
+                        };
+                        new DBThread().new WeightDeleteThread(handler,((WeightEntity) item).getId()).start();
+                    }
+                }).setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        L.i(TAG, "----cancel");
+                        mSwipeListView.closeOpenedItems();
+                    }
+                }).create();
+                deleteDialog.show();
+            }
+        });
+
         mSwipeListView = (SwipeListView) findViewById(R.id.mSwipeListView);
         mSwipeListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mSwipeListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
 
                 @Override
@@ -188,9 +242,8 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
             });
-        }*/
-
-        /*mSwipeListView.setSwipeListViewListener(new BaseSwipeListViewListener() {
+        }
+        mSwipeListView.setSwipeListViewListener(new BaseSwipeListViewListener() {
 
             @Override
             public void onStartOpen(int position, int action,
@@ -226,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 weightAdapter.notifyDataSetChanged();
             }
-        });*/
+        });
 
         mSwipeListView.setAdapter(weightAdapter);
 

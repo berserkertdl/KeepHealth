@@ -28,16 +28,23 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/7/13 0013.
  */
-public class WeightAdapter extends BaseAdapter {
+public class WeightAdapter extends BaseAdapter{
 
     private Context context;
     private List items;
     private LayoutInflater inflater;
     private static final String weeks[] = new String[]{"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 
+    private OnClickListener mClickListener;
 
-    public interface ClickListener{
+    public interface OnClickListener {
+        void onEditClick(View v,final Object item);
+        void onDeleteClick(View v,final Object item);
 
+    }
+
+    public void setClickListener(OnClickListener onClickListener){
+        this.mClickListener = onClickListener;
     }
 
     public WeightAdapter(Context mContext, List items) {
@@ -66,7 +73,7 @@ public class WeightAdapter extends BaseAdapter {
         Object item = items.get(position);
         if (item.getClass() == WeightEntity.class) {
             convertView = inflater.inflate(R.layout.weight_list_item_layout, parent,false);
-            WeightEntity entity = (WeightEntity) item;
+            final WeightEntity entity = (WeightEntity) item;
             Calendar cd = Calendar.getInstance();
             cd.setTime(entity.getAdd_time());
             ((TextView) convertView.findViewById(R.id.week)).setText(weeks[cd.get(Calendar.DAY_OF_WEEK)]);
@@ -75,6 +82,21 @@ public class WeightAdapter extends BaseAdapter {
             String minute = cd.get(Calendar.MINUTE) + "".length() == 1 ? "0" : "" + cd.get(Calendar.MINUTE);
             ((TextView) convertView.findViewById(R.id.hour_min)).setText(hour + ":" + minute);
             ((TextView) convertView.findViewById(R.id.weight)).setText(String.format("%g kg", entity.getWeight()));
+
+            ((Button)convertView.findViewById(R.id.example_row_b_action_1)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClickListener.onEditClick(v, entity);
+                }
+            });
+
+            ((Button)convertView.findViewById(R.id.example_row_b_action_2)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClickListener.onDeleteClick(v,entity);
+                }
+            });
+
             convertView.setTag(entity);
         } else {
             convertView = inflater.inflate(R.layout.weight_list_item_title_layout, null);

@@ -71,6 +71,20 @@ public class DBManager {
         }
     }
 
+    public static void deleteWeightInfo(int id){
+        try {
+            db.beginTransaction();
+            db.execSQL("delete from weight_info where id=?", new Object[]{id});
+            db.setTransactionSuccessful();
+            L.i(TAG, "delete successful");
+        } catch (Exception e) {
+            e.printStackTrace();
+            L.e(TAG, "delete error");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public static void updateWeightInfo(WeightEntity vo) {
         try {
             db.beginTransaction();

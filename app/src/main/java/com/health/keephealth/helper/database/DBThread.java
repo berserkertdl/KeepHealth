@@ -10,19 +10,41 @@ import com.health.keephealth.helper.vo.WeightEntity;
  */
 public  class  DBThread {
 
-    public class WeightInsertThread extends Thread{
+    public class WeightSaveOrUpdateThread extends Thread{
 
         private WeightEntity entity;
         private Handler handler;
 
-        public WeightInsertThread(Handler handler,WeightEntity entity) {
+        public WeightSaveOrUpdateThread(Handler handler, WeightEntity entity) {
             this.entity = entity;
             this.handler = handler;
         }
 
         @Override
         public void run() {
-            DBManager.insertWeightInfo(entity);
+            if(entity.getId()>0){
+                DBManager.updateWeightInfo(entity);
+            }else{
+                DBManager.insertWeightInfo(entity);
+            }
+            Message msg = new Message();
+            msg.what = 0;
+            handler.sendMessage(msg);
+        }
+    }
+
+    public class WeightDeleteThread extends Thread{
+        private int id;
+        private Handler handler;
+
+        public WeightDeleteThread(Handler handler,int id) {
+            this.id = id;
+            this.handler = handler;
+        }
+
+        @Override
+        public void run() {
+            DBManager.deleteWeightInfo(id);
             Message msg = new Message();
             msg.what = 0;
             handler.sendMessage(msg);
