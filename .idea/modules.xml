@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/KeepHealth.iml" filepath="$PROJECT_DIR$/KeepHealth.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/swipelistview/swipelistview.iml" filepath="$PROJECT_DIR$/swipelistview/swipelistview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/swipemenulistview/swipemenulistview.iml" filepath="$PROJECT_DIR$/swipemenulistview/swipemenulistview.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp">
+
+    <LinearLayout
+        android:id="@+id/weight_title_container"
+        android:layout_width="36dp"
+        android:layout_height="match_parent"
+        android:background="@color/weight_title"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="周一"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="13"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/hour_min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15:39"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/weight_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/weight_title_container"
+        android:paddingLeft="16dp"
+        android:text="@string/dialog_weight" />
+
+    <TextView
+        android:id="@+id/weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@+id/weight_title"
+        android:text="111aaaa" />
+
+</RelativeLayout>

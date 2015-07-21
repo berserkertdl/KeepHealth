@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+</head>
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:400px"></div>
+    <!-- ECharts单文件引入 -->
+    <script src="echarts-all.js"></script>
+    <script type="text/javascript">
+       
+                var myChart = echarts.init(document.getElementById('main')); 
+                
+                var option = {
+                    tooltip: {
+                        show: true
+                    },
+                    legend: {
+                        data:['一','二']
+                    },
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ["星期一","星期二","星期三","星期四","星期五","星期六","星期天"]
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            "name":"销量",
+                            "type":"line",
+                            "data":[5, 20, 40, 10, 10, 20,100],
+							 markPoint : {
+								data : [
+									{type : 'max', name: '最大值'},
+									{type : 'min', name: '最小值'}
+								]
+							},
+							markLine : {
+								data : [
+									{type : 'average', name: '平均值'}
+								]
+							}
+                        },
+						
+						{
+							name:'最低气温',
+							type:'line',
+							data:[22, 12, 42, 21, 55, 34, 45],
+							markPoint : {
+								data : [
+									{name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
+								]
+							},
+							markLine : {
+								data : [
+									{type : 'average', name : '平均值'}
+								]
+							}
+						}
+                    ]
+                };
+        
+                // 为echarts对象加载数据 
+                myChart.setOption(option); 
+           
+    </script>
+</body>

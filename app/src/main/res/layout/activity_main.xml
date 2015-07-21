@@ -6,37 +6,42 @@
     tools:context=".MainActivity">
 
 
-   <!-- <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+     <android.support.v4.widget.DrawerLayout
+         android:id="@+id/drawer"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
 
+         <!-- Content -->
+         <RelativeLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
+             <com.health.swipelistview.SwipeListView
+                 android:id="@+id/mSwipeListView"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:listSelector="#00000000"
+                 swipe:swipeBackView="@+id/back"
+                 swipe:swipeCloseAllItemsWhenMoveList="true"
+                 swipe:swipeDrawableChecked="@drawable/choice_selected"
+                 swipe:swipeDrawableUnchecked="@drawable/choice_unselected"
+                 swipe:swipeFrontView="@+id/front"
+                 swipe:swipeMode="both" />
 
-        &lt;!&ndash; Side Drawer &ndash;&gt;
-        <LinearLayout
-            android:id="@+id/drawer_view"
-            android:layout_width="@dimen/navdrawer_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="#FFFFFF"
-            android:orientation="vertical">
+         </RelativeLayout>
 
-        </LinearLayout>
+         <!-- Side Drawer -->
+         <LinearLayout
+             android:id="@+id/drawer_view"
+             android:layout_width="@dimen/navdrawer_width"
+             android:layout_height="match_parent"
+             android:layout_gravity="start"
+             android:background="#FFFFFF"
+             android:orientation="vertical">
 
-    </android.support.v4.widget.DrawerLayout>-->
+         </LinearLayout>
 
-    <com.health.swipelistview.SwipeListView
-        android:id="@+id/mSwipeListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:listSelector="#00000000"
-        swipe:swipeBackView="@+id/back"
-        swipe:swipeCloseAllItemsWhenMoveList="true"
-        swipe:swipeDrawableChecked="@drawable/choice_selected"
-        swipe:swipeDrawableUnchecked="@drawable/choice_unselected"
-        swipe:swipeFrontView="@+id/front"
-        swipe:swipeMode="both" />
+     </android.support.v4.widget.DrawerLayout>
 
 
     <!-- Content -->

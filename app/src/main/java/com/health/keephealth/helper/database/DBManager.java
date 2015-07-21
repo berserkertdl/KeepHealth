@@ -42,7 +42,9 @@ public class DBManager {
 
     public static void initManger(Context context) {
         if (initialized) {
-            throw new IllegalArgumentException("DBManager is initialized done,need't init");
+            L.e(TAG,"DBManager is initialized done,need't init");
+            return;
+//            throw new IllegalArgumentException("DBManager is initialized done,need't init");
         }
         instance = new DBManager(context);
     }

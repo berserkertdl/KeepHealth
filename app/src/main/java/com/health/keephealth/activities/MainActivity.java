@@ -23,12 +23,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.health.keephealth.R;
 import com.health.keephealth.helper.database.DBManager;
 import com.health.keephealth.helper.database.DBThread;
+import com.health.keephealth.helper.utils.JSinterface;
 import com.health.keephealth.helper.utils.L;
 import com.health.keephealth.helper.vo.PackageItem;
 import com.health.keephealth.helper.vo.WeightEntity;
@@ -52,29 +55,25 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private EditText etStartTime, etEndTime;
-    private ListView listView;
-    private SimpleCursorAdapter cursorAdapter;
-    private Cursor cursor = null;
-
 
     private SwipeListView mSwipeListView;
     private final static String TAG = MainActivity.class.getSimpleName();
     private Handler handler;
+    private ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        listView = (ListView) findViewById(R.id.list);
-
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         DBManager.initManger(this);
         initToolBar();
-//        initDrawer();
+        initDrawer();
         findView();
-
     }
+
 
     private WeightAdapter weightAdapter;
     private List<WeightEntity> entityList;
@@ -95,22 +94,23 @@ public class MainActivity extends AppCompatActivity {
                 items.add(new String[]{year, month});
             }
             items.add(entity);
-        };
+        }
+        ;
         return items;
     }
 
     private void initDrawer() {
-       /* mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         // 實作 drawer toggle 並放入 toolbar
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mDrawerToggle);*/
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     private void initToolBar() {
         actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.actionbar_title);
-
+        actionBar.setHomeButtonEnabled(true);
     }
 
     @Override
@@ -123,16 +123,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.menu_add) {
-            if (entityList == null || entityList.size() == 0) {
-                showWeightEditDialogFragMent(null);
-            } else {
-                WeightEntity entity = entityList.get(0);
-                entity.setId(0);
-                entity.setComment("");
-                showWeightEditDialogFragMent(entity);
-            }
-            return true;
+        switch (id){
+            case R.id.menu_add:
+                if (entityList == null || entityList.size() == 0) {
+                    showWeightEditDialogFragMent(null);
+                } else {
+                    WeightEntity entity = entityList.get(0);
+                    entity.setId(0);
+                    entity.setComment("");
+                    showWeightEditDialogFragMent(entity);
+                }
+                return true;
+
+            case R.id.home:
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -154,8 +159,7 @@ public class MainActivity extends AppCompatActivity {
         weightDialogFragment.show(fragmentTransaction, "df");
     }
 
-    private List<PackageItem> data;
-    private ProgressDialog progressDialog;
+
 
     private void findView() {
 
@@ -174,10 +178,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         L.i(TAG, "----体重");
-                        if(which!=-1){
+                        if (which != -1) {
                             return;
                         }
-                        handler = new Handler(){
+                        handler = new Handler() {
                             @Override
                             public void handleMessage(Message msg) {
                                 switch (msg.what) {
@@ -188,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         };
-                        new DBThread().new WeightDeleteThread(handler,((WeightEntity) item).getId()).start();
+                        new DBThread().new WeightDeleteThread(handler, ((WeightEntity) item).getId()).start();
                     }
                 }).setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                     @Override
